@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper PUBLIC "-//testMybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.speed.dao.UserDao">
+ 	 <select id="queryUserAll" resultType="com.speed.entity.UserVO">
+ 	 	select
+ 	 	user_id userId,
+ 	 	username userName,
+ 	 	password password
+ 	 	from users
+ 	 </select>
+ 	 <select id="queryUserByUserId" resultType="com.speed.entity.UserVO" >
+ 	 select
+ 	 	user_id userId,
+ 	 	username userName,
+ 	 	password password
+ 	 	from users
+ 	 	where user_id=#{userId}
+ 	 </select>
+ 	 <insert id="insertUser">
+ 	 insert into users
+ 	 (username,
+ 	 password)
+ 	 values(#{userName},#{password})
+ 	 </insert>
+ 	 <update id="updateUser">
+ 	 	update users
+ 	 	<set>
+ 	 		<if test="userName!=null">username = #{userName},</if>
+ 	 		<if test="userName!=null">password = #{password}</if>
+ 	 	</set>
+ 	 	where user_id=#{userId}
+ 	 </update>
+ 	 <delete id="deleteUser">
+ 	 delete from users where user_id = #{userId}
+ 	 </delete>
+ 	 <insert id="inserUsers">
+ 	 	INSERT INTO users(username,password)
+ 	 	VALUES
+ 	 	<foreach collection="emps" item="item" separator=",">
+ 	 	(#{item.userName},#{item.password})
+ 	 	</foreach>
+ 	 </insert>
+ 	 <delete id="deleteBatch">
+ 	 	delete from users
+ 	 	where 1=1
+ 	 	<if test="emps!=null">
+ 	 	and
+ 	 	<foreach collection="emps" item="item" open="(" close=")" separator="or">
+			user_id=#{item}
+ 	 	</foreach>
+ 	 	</if>
+ 	 	<if test="emps==null">
+ 	 	and 1=2
+ 	 	</if>
+ 	 </delete>
+ 	 <update id="updateBatch">
+ 	 update users
+ 	 <set>
+ 	 	<if test="user.userName!=null and user.userName!=''">
+ 	 	username=#{user.userName},
+ 	 	</if>
+ 	 	<if test="user.password!=null and user.password!=''">
+ 	 	password=#{user.password}
+ 	 	</if>
+ 	 </set>
+ 	 where 1=1
+ 	 <if test="emps!=null">
+ 	 and user_id in
+	 <foreach collection="emps" open="(" item="item" separator="," close=")">
+ 	 	#{item}
+ 	 </foreach>
+ 	 </if>
+ 	 <if test="emps==null">
+ 	 and 1=2
+ 	 </if>
+ 	 </update>
+ </mapper>
