@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.speed.entity.UserVO;
 
 
+
 public interface UserDao {
 	List<UserVO> queryUserAll();
 	UserVO queryUserByUserId(int userId);
